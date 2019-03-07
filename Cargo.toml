@@ -1,7 +1,8 @@
 [package]
-name = "rocketPractice"
+name = "rocket_practice"
 version = "0.1.0"
 authors = ["hamadakafu <kafu.h1998@gmail.com>"]
 edition = "2018"
 
 [dependencies]
+rocket = "0.4.0"
