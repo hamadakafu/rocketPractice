@@ -5,7 +5,7 @@ use crate::othello::OthelloError::OutOfBounds;
 fn test_othello_cell() {
     let mut oc: OthelloCell = OthelloCell::new(3, 4);
     assert_eq!(oc.state, CellState::Empty);
-    oc.set(CellState::White);
+    oc.set_state(CellState::White);
     assert_eq!(oc.state, CellState::White);
 }
 
@@ -29,5 +29,15 @@ fn test_point_check_out_of_bounds() {
     for test in test_table {
         assert_eq!(test.0, test.1.check_out_of_bounds());
     }
+}
 
+#[test]
+fn test_point_to_index() {
+    let test_table: Vec<(usize, Point)> = vec![
+        (3, Point::new(0, 3)),
+        (54, Point::new(6, 6)),
+    ];
+    for test in test_table {
+        assert_eq!(test.0, test.1.to_index());
+    }
 }

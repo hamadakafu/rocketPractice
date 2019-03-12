@@ -27,10 +27,14 @@ pub enum OthelloError {
     NoExistChar {
         c: char,
     },
+    #[fail(display = "Can't set at this cell: cell: {:?}", cell)]
+    CantSetAtCell {
+        cell: OthelloCell,
+    },
 }
 
 
-#[derive()]
+#[derive(Eq, PartialEq)]
 pub struct Othello {
     /*
      \ y0 - y1 - .. - yN
@@ -60,7 +64,6 @@ impl Othello {
             board: Board::new()
         }
     }
-
 
     pub fn set(&mut self, x: isize, y: isize, piece: char)
                -> Result<(), OthelloError>

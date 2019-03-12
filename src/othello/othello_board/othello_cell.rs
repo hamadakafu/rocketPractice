@@ -5,7 +5,7 @@ use std::fmt;
 use std::ops::Add;
 
 use super::super::OthelloError;
-use crate::othello::othello_board::othello_cell::Direction::*;
+use self::Direction::*;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub struct OthelloCell {
@@ -20,12 +20,8 @@ impl OthelloCell {
             state: CellState::Empty,
         }
     }
-    pub fn set(&mut self, cs: CellState) {
-        self.state = cs;
-    }
-    pub fn get_state(&self) -> CellState {
-        self.state
-    }
+    pub fn set_state(&mut self, cs: CellState) { self.state = cs; }
+    pub fn get_state(&self) -> CellState { self.state }
 }
 
 #[derive(Eq, PartialEq, Copy, Clone)]
@@ -38,9 +34,9 @@ pub enum CellState {
 impl fmt::Debug for CellState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
-            White => write!(f, "W"),
-            Black => write!(f, "B"),
-            Empty => write!(f, "E"),
+            CellState::White => write!(f, "W"),
+            CellState::Black => write!(f, "B"),
+            CellState::Empty => write!(f, "E"),
         }
     }
 }
@@ -52,9 +48,7 @@ pub struct Point {
 }
 
 impl Point {
-    pub fn new(x: isize, y: isize) -> Point {
-        Point { x, y }
-    }
+    pub fn new(x: isize, y: isize) -> Point { Point { x, y } }
     pub fn check_out_of_bounds(&self)
                                -> Result<(), OthelloError>
     {
@@ -63,9 +57,7 @@ impl Point {
             self.y >= super::super::LENGTH || self.y < 0,
         ) { Err(OthelloError::OutOfBounds { point: *self }) } else { Ok(()) }
     }
-    pub fn to_index(&self) -> usize {
-        (self.x * super::super::LENGTH + self.y) as usize
-    }
+    pub fn to_index(&self) -> usize { (self.x * super::super::LENGTH + self.y) as usize }
 }
 
 impl Add<Direction> for Point {
@@ -104,7 +96,7 @@ impl Add<Direction> for Point {
     }
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum Direction {
     // clockwise
     Up,
@@ -117,3 +109,17 @@ pub enum Direction {
     UpLeft,
 }
 
+impl Direction {
+    pub fn to_vec() -> Vec<Direction> {
+        vec![
+            Up,
+            UpRight,
+            Right,
+            DownRight,
+            Down,
+            DownLeft,
+            Left,
+            UpLeft,
+        ]
+    }
+}
