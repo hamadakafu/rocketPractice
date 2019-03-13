@@ -70,7 +70,7 @@ impl Board {
         point.check_out_of_bounds()?;
         self.change(point, cs);
         for dir in Direction::to_vec() {
-            self.sandwich(dir, point + dir, cs);
+            self.sandwich(dir, point + dir, cs)?;
         }
         Ok(())
     }

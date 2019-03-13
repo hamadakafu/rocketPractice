@@ -36,7 +36,7 @@ impl fmt::Debug for CellState {
         match self {
             CellState::White => write!(f, "W"),
             CellState::Black => write!(f, "B"),
-            CellState::Empty => write!(f, "E"),
+            CellState::Empty => write!(f, " "),
         }
     }
 }

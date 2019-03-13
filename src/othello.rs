@@ -1,6 +1,8 @@
 #[cfg(test)]
 mod tests;
 mod othello_board;
+#[macro_use]
+mod io;
 
 use std::fmt;
 
@@ -47,11 +49,21 @@ pub struct Othello {
     xN o    o    ..   o
     */
     board: Board,
+    n_turn: isize,
+    next_turn: OthelloPlayer,
 }
 
 impl fmt::Debug for Othello {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "othello");
+        writeln!(f, "othello")?;
+        writeln!(f, "{:?}", self.board)
+    }
+}
+
+impl fmt::Display for Othello {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        writeln!(f, "othello")?;
+        writeln!(f, "turn: {}, player: {:?}", self.n_turn, self.next_turn)?;
         writeln!(f, "{:?}", self.board)
     }
 }
@@ -61,8 +73,40 @@ const LENGTH: isize = 8;
 impl Othello {
     pub fn new() -> Othello {
         Othello {
-            board: Board::new()
+            board: Board::new(),
+            n_turn: 0,
+            next_turn: OthelloPlayer::White,
         }
+    }
+    pub fn start(mut self) -> Result<(), OthelloError> {
+        let handle = std::io::stdin();
+        let mut r = io::StdinReader::new(handle.lock());
+        while self.n_turn < LENGTH * LENGTH - 4 {
+            println!("{}", self);
+            println!("input x y (ex: 3 4): ");
+            let (x, y): (isize, isize) = input!(r, isize, isize);
+            match self.next_turn {
+                OthelloPlayer::White => {
+                    self.set(x, y, 'W')?;
+                },
+                OthelloPlayer::Black => {
+                    self.set(x, y, 'B')?;
+                }
+            }
+            self.next();
+        }
+        Ok(())
+    }
+    fn next(&mut self) {
+        match &self.next_turn {
+            OthelloPlayer::White => {
+                self.next_turn = OthelloPlayer::Black;
+            },
+            OthelloPlayer::Black => {
+                self.next_turn = OthelloPlayer::White;
+            },
+        }
+        self.n_turn += 1;
     }
 
     pub fn set(&mut self, x: isize, y: isize, piece: char)
@@ -76,3 +120,8 @@ impl Othello {
     }
 }
 
+#[derive(Debug, Eq, PartialEq)]
+enum OthelloPlayer {
+    White,
+    Black,
+}
