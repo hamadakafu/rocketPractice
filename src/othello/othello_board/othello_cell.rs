@@ -24,14 +24,14 @@ impl OthelloCell {
     pub fn get_state(&self) -> CellState { self.state }
 }
 
-#[derive(Eq, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone)]
 pub enum CellState {
     White,
     Black,
     Empty,
 }
 
-impl fmt::Debug for CellState {
+impl fmt::Display for CellState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             CellState::White => write!(f, "W"),
@@ -58,6 +58,13 @@ impl Point {
         ) { Err(OthelloError::OutOfBounds { point: *self }) } else { Ok(()) }
     }
     pub fn to_index(&self) -> usize { (self.x * super::super::LENGTH + self.y) as usize }
+    pub fn neighbors(&self) -> Vec<Point> {
+        Direction::change_to_vec().into_iter()
+            .map(|dir| *self + dir)
+            .filter(
+                |point| point.check_out_of_bounds().is_ok()
+            ).collect()
+    }
 }
 
 impl Add<Direction> for Point {
@@ -110,7 +117,7 @@ pub enum Direction {
 }
 
 impl Direction {
-    pub fn to_vec() -> Vec<Direction> {
+    pub fn change_to_vec() -> Vec<Direction> {
         vec![
             Up,
             UpRight,

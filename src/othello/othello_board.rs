@@ -29,50 +29,41 @@ impl Board {
 
     fn get_cell(&self, point: Point) -> OthelloCell { self.0[point.to_index()] }
 
-    fn change(&mut self, point: Point, cs: CellState)
-    { self.0[point.to_index()].set_state(cs); }
+    fn change(&mut self, point: Point, cs: CellState) {
+        self.0[point.to_index()].set_state(cs);
+    }
 
     pub fn set(&mut self, point: Point, cs: CellState)
-               -> Result<(), OthelloError>
+               -> Result<usize, OthelloError>
     {
         point.check_out_of_bounds()?;
-        if cs == CellState::Empty {
-            return Err(OthelloError::CantSetEmpty);
-        }
-        match self.0[point.to_index()].get_state() {
-            CellState::Black | CellState::White => Err(OthelloError::AlreadyOccupied {
-                cell: self.0[point.to_index()]
-            }),
+        if cs == CellState::Empty { return Err(OthelloError::CantSetEmpty); }
+        match self.get_cell(point).get_state() {
+            CellState::Black | CellState::White =>
+                Err(OthelloError::AlreadyOccupied {
+                    cell: self.get_cell(point),
+                }),
             CellState::Empty => {
-                let can_set = Direction::to_vec().into_iter().any(
-                    |dir| {
-                        let neighbor = point + dir;
-                        neighbor.check_out_of_bounds().map_or_else(
-                            |_| false,
-                            |_| self.get_cell(neighbor).get_state() != CellState::Empty,
-                        )
-                    }
-                );
-                if can_set {
-                    self.reverse(point, cs)
-                } else {
-                    Err(OthelloError::CantSetAtCell {
-                        cell: self.get_cell(point)
-                    })
-                }
+                let n_changed_cell = self.reverse(point, cs)?;
+                self.change(point, cs);
+                Ok(n_changed_cell)
             }
         }
     }
 
     fn reverse(&mut self, point: Point, cs: CellState)
-               -> Result<(), OthelloError>
+               -> Result<usize, OthelloError>
     {
-        point.check_out_of_bounds()?;
-        self.change(point, cs);
-        for dir in Direction::to_vec() {
-            self.sandwich(dir, point + dir, cs)?;
+        let changed_cell: usize = Direction::change_to_vec().into_iter()
+            .filter_map(|dir| self.sandwich(dir, point + dir, cs))
+            .sum();
+        if changed_cell == 0 {
+            return Err(
+                OthelloError::CantSetAtCell { cell: self.get_cell(point) }
+            );
+        } else {
+            Ok(changed_cell)
         }
-        Ok(())
     }
 
     fn sandwich(
@@ -80,23 +71,22 @@ impl Board {
         dir: Direction,
         point: Point,
         cs: CellState,
-    ) -> Result<bool, OthelloError>
+    ) -> Option<usize>
     {
-        if let Err(_) = point.check_out_of_bounds() { return Ok(false); }
+        if point.check_out_of_bounds().is_err() { return None; }
+
         let now_cell = self.get_cell(point);
         if now_cell.get_state() == CellState::Empty {
-            Ok(false)
+            None
         } else if now_cell.get_state() == cs {
-            Ok(true)
+            Some(0)
         } else {
-            match self.sandwich(dir, point + dir, cs) {
-                Ok(do_reverse) if do_reverse => {
+            self.sandwich(dir, point + dir, cs).map(
+                |n| {
                     self.change(point, cs);
-                    Ok(true)
+                    n + 1
                 }
-                e @ Err(_) => e,
-                _ => Ok(false)
-            }
+            )
         }
     }
 }
@@ -108,7 +98,7 @@ impl fmt::Debug for Board {
         for x in 0..super::LENGTH {
             write!(f, "{}|", x)?;
             for y in 0..super::LENGTH {
-                write!(f, " {:?}", self.0[Point::new(x, y).to_index()].get_state())?;
+                write!(f, " {}", self.get_cell(Point::new(x, y)).get_state())?;
             }
             write!(f, "\n")?;
         }

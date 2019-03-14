@@ -3,8 +3,8 @@ use super::*;
 #[test]
 fn test_board_new() {
     let b = Board::new();
-    assert_eq!(b.get_cell(Point::new(3, 4)).get_state(), CellState::Black);
-    assert_eq!(b.get_cell(Point::new(4, 4)).get_state(), CellState::White);
+    assert_eq!(CellState::Black, b.get_cell(Point::new(3, 4)).get_state());
+    assert_eq!(CellState::White, b.get_cell(Point::new(4, 4)).get_state());
 }
 
 #[test]
@@ -22,7 +22,7 @@ fn test_board_change() {
 
 #[test]
 fn test_board_set() {
-    let test_table: Vec<(Point, CellState, Result<(), OthelloError>)> = vec![
+    let test_table: Vec<(Point, CellState, Result<usize, OthelloError>)> = vec![
         (
             Point::new(10, 3), CellState::Black,
             Err(OthelloError::OutOfBounds { point: Point::new(10, 3) })
@@ -32,15 +32,15 @@ fn test_board_set() {
             Err(OthelloError::CantSetEmpty)
         ),
         (
-            Point::new(3, 5), CellState::White, Ok(())
+            Point::new(3, 5), CellState::White, Ok(1)
         ),
         (
             Point::new(7, 7), CellState::Black,
             Err(OthelloError::CantSetAtCell { cell: OthelloCell::new(7, 7) })
         ),
     ];
+    let mut b = Board::new();
     for test in test_table {
-        let mut b = Board::new();
         assert_eq!(b.set(test.0, test.1), test.2);
     }
 }

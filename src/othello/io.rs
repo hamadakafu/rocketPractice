@@ -14,7 +14,6 @@ impl<R: BufRead> StdinReader<R> {
     }
 }
 
-#[macro_export]
 macro_rules! input {
     ($reader : expr, $t : ty) => { // one variable
         match &mut $reader {

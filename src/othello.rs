@@ -10,7 +10,11 @@ use failure::Fail;
 
 use crate::othello::othello_board::{
     Board,
-    othello_cell::{OthelloCell, CellState, Point},
+    othello_cell::{
+        OthelloCell,
+        CellState,
+        Point
+    },
 };
 
 #[derive(Debug, Fail, Eq, PartialEq)]
@@ -85,12 +89,24 @@ impl Othello {
             println!("{}", self);
             println!("input x y (ex: 3 4): ");
             let (x, y): (isize, isize) = input!(r, isize, isize);
-            match self.next_turn {
+            let set_result: Result<usize, OthelloError> = match self.next_turn {
                 OthelloPlayer::White => {
-                    self.set(x, y, 'W')?;
-                },
+                    self.set(x, y, 'W')
+                }
                 OthelloPlayer::Black => {
-                    self.set(x, y, 'B')?;
+                    self.set(x, y, 'B')
+                }
+            };
+            match set_result {
+                Err(OthelloError::OutOfBounds { point: _ }) |
+                Err(OthelloError::CantSetAtCell { cell: _ }) |
+                Err(OthelloError::AlreadyOccupied { cell: _ }) => {
+                    println!("Invalid input.");
+                    println!("Could you input again?");
+                    continue;
+                }
+                e => {
+                    e?;
                 }
             }
             self.next();
@@ -101,16 +117,16 @@ impl Othello {
         match &self.next_turn {
             OthelloPlayer::White => {
                 self.next_turn = OthelloPlayer::Black;
-            },
+            }
             OthelloPlayer::Black => {
                 self.next_turn = OthelloPlayer::White;
-            },
+            }
         }
         self.n_turn += 1;
     }
 
     pub fn set(&mut self, x: isize, y: isize, piece: char)
-               -> Result<(), OthelloError>
+               -> Result<usize, OthelloError>
     {
         match &piece {
             'W' => self.board.set(Point::new(x, y), CellState::White),
