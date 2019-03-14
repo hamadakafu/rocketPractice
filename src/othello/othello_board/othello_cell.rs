@@ -1,13 +1,15 @@
-#[cfg(test)]
-mod tests;
-
 use std::fmt;
 use std::ops::Add;
+
+use serde_derive::{Deserialize, Serialize};
 
 use super::super::OthelloError;
 use self::Direction::*;
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[cfg(test)]
+mod tests;
+
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Deserialize, Serialize)]
 pub struct OthelloCell {
     point: Point,
     state: CellState,
@@ -24,7 +26,7 @@ impl OthelloCell {
     pub fn get_state(&self) -> CellState { self.state }
 }
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Deserialize, Serialize)]
 pub enum CellState {
     White,
     Black,
@@ -41,7 +43,7 @@ impl fmt::Display for CellState {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Copy, Clone)]
+#[derive(Debug, Eq, PartialEq, Copy, Clone, Deserialize, Serialize)]
 pub struct Point {
     x: isize,
     y: isize,

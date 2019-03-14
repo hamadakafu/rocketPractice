@@ -1,12 +1,10 @@
-#[cfg(test)]
-mod tests;
-mod othello_board;
-#[macro_use]
-mod io;
-
 use std::fmt;
 
 use failure::Fail;
+
+use serde_derive::{Deserialize, Serialize};
+use mongodb::oid::ObjectId;
+use mongodb::coll::options::IndexModel;
 
 use crate::othello::othello_board::{
     Board,
@@ -16,6 +14,12 @@ use crate::othello::othello_board::{
         Point
     },
 };
+
+#[cfg(test)]
+mod tests;
+mod othello_board;
+#[macro_use]
+mod io;
 
 #[derive(Debug, Fail, Eq, PartialEq)]
 pub enum OthelloError {
@@ -40,7 +44,7 @@ pub enum OthelloError {
 }
 
 
-#[derive(Eq, PartialEq)]
+#[derive(Model, Eq, PartialEq, Deserialize, Serialize)]
 pub struct Othello {
     /*
      \ y0 - y1 - .. - yN
@@ -52,8 +56,15 @@ pub struct Othello {
     |
     xN o    o    ..   o
     */
+    #[serde(rename="_id", skip_serializing_if="Option::is_none")]
+    id: Option<ObjectId>,
+    #[model(index(index="dsc", unique="true"))]
+    room_name: String,
+    #[model(index(index="dsc"))]
     board: Board,
+    #[model(index(index="dsc"))]
     n_turn: isize,
+    #[model(index(index="dsc"))]
     next_turn: OthelloPlayer,
 }
 
@@ -66,7 +77,7 @@ impl fmt::Debug for Othello {
 
 impl fmt::Display for Othello {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        writeln!(f, "othello")?;
+        writeln!(f, "room_name: {}", self.room_name)?;
         writeln!(f, "turn: {}, player: {:?}", self.n_turn, self.next_turn)?;
         writeln!(f, "{:?}", self.board)
     }
@@ -75,8 +86,10 @@ impl fmt::Display for Othello {
 const LENGTH: isize = 8;
 
 impl Othello {
-    pub fn new() -> Othello {
+    pub fn new(room_name: String) -> Othello {
         Othello {
+            id: None,
+            room_name,
             board: Board::new(),
             n_turn: 0,
             next_turn: OthelloPlayer::White,
@@ -136,7 +149,7 @@ impl Othello {
     }
 }
 
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Debug, Eq, PartialEq, Deserialize, Serialize)]
 enum OthelloPlayer {
     White,
     Black,

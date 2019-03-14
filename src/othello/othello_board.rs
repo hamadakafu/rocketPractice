@@ -1,14 +1,16 @@
-#[cfg(test)]
-mod tests;
-
-pub mod othello_cell;
-
 use std::fmt;
+
+use serde_derive::{Deserialize, Serialize};
 
 use self::othello_cell::{Point, OthelloCell, CellState, Direction};
 use super::OthelloError;
 
-#[derive(Eq, PartialEq)]
+
+#[cfg(test)]
+mod tests;
+pub mod othello_cell;
+
+#[derive(Eq, PartialEq, Deserialize, Serialize)]
 pub struct Board(pub Vec<OthelloCell>);
 
 impl Board {
