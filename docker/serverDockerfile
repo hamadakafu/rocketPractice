@@ -1,0 +1,19 @@
+FROM rustlang/rust:nightly as builder
+WORKDIR /usr/src/myapp
+RUN rustup override set nightly && \
+    mkdir src && \
+    touch src/main.rs && \
+    echo "fn main(){}" >> src/main.rs
+COPY Cargo.toml .
+RUN cargo build --release
+COPY Rocket.toml .
+COPY src src
+RUN cargo build --release
+
+FROM rustlang/rust:nightly
+WORKDIR /usr/src/myapp
+COPY --from=builder /usr/src/myapp/target/release/rocket_practice .
+ENV ROCKET_ENV production
+ENV RUST_BACKTRACE 1
+EXPOSE 8000
+CMD ["./rocket_practice"]

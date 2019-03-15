@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-server-pod
+  labels:
+    app: web-server
+spec:
+  containers:
+    - name: rocket-container
+      image: kafuhamada/rocket-practice
+      ports:
+        - containerPort: 8000
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mongodb-pod
+  labels:
+    app: mongodb
+spec:
+  restartPolicy: Never
+  containers:
+    - name: mongodb-container
+      image: kafuhamada/mongodb
+      ports:
+        - containerPort: 27017

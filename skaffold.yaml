@@ -1,0 +1,15 @@
+apiVersion: skaffold/v1beta6
+kind: Config
+build:
+  artifacts:
+    - image: kafuhamada/rocket-practice
+      context: .
+      docker:
+        dockerfile: docker/serverDockerfile
+    - image: kafuhamada/mongodb
+      docker:
+        dockerfile: docker/mongodbDockerfile
+deploy:
+  kubectl:
+    manifests:
+      - ./k8s/*

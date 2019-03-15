@@ -8,7 +8,7 @@ extern crate wither_derive;
 use rocket::{routes, get};
 use mongodb::{
     ThreadedClient,
-    // db::{Database, ThreadedDatabase},
+    db::{Database, ThreadedDatabase},
     // coll::options::IndexModel,
     // oid::ObjectId,
 };
@@ -19,17 +19,20 @@ mod othello;
 
 #[get("/hello")]
 fn hello() -> String {
-    String::from("hello")
+    String::from("hello unko unko\n")
+}
+#[get("/mongodb_test")]
+fn mm() -> String {
+    let db: Database = mongodb::Client::with_uri("mongodb://mongodb-service:27017/")
+        .expect("Failed to initialize client.").db("myDB");
+    let othellos = othello::Othello::find_one(db.clone(), None, None).expect("wtf");
+    format!("othello: {:?}", othellos)
 }
 
-fn main() -> Result<(), othello::OthelloError>{
-    let db = mongodb::Client::with_uri("mongodb://localhost:27017/").unwrap().db("myDB");
-    let mut othello_game = othello::Othello::new(String::from("hoge"));
-    othello_game.save(db.clone(), None).unwrap();
-    // othello_game.start()
-    // rocket::ignite().mount("/", routes![
-    //     hello,
-    // ]).launch();
-    Ok(())
+fn main() {
+    rocket::ignite().mount("/", routes![
+        hello,
+        mm,
+    ]).launch();
 }
 
