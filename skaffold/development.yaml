@@ -12,4 +12,5 @@ build:
 deploy:
   kubectl:
     manifests:
-      - ./k8s/*
+      # other than production
+      - ./k8s/*.yaml
