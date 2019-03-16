@@ -5,9 +5,10 @@ metadata:
   labels:
     app: web-server
 spec:
+  restartPolicy: Never
   containers:
     - name: rocket-container
-      image: kafuhamada/rocket-practice
+      image: us.gcr.io/cloud-shell-gcloud/rocket-server
       ports:
         - containerPort: 8000
 
@@ -22,6 +23,6 @@ spec:
   restartPolicy: Never
   containers:
     - name: mongodb-container
-      image: kafuhamada/mongodb
+      image: us.gcr.io/cloud-shell-gcloud/mongodb
       ports:
         - containerPort: 27017
