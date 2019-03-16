@@ -1,0 +1,4 @@
+/target
+**/*.rs.bk
+k8s/production
+skaffold/production*
