@@ -1,12 +1,12 @@
-apiVersion: skaffold/v1beta6
+apiVersion: skaffold/v1beta7
 kind: Config
 build:
   artifacts:
-    - image: kafuhamada/rocket-practice
+    - image: us.gcr.io/cloud-shell-gcloud/rocket-server
       context: .
       docker:
         dockerfile: docker/serverDockerfile
-    - image: kafuhamada/mongodb
+    - image: us.gcr.io/cloud-shell-gcloud/mongodb
       docker:
         dockerfile: docker/mongodbDockerfile
 deploy:
