@@ -1,0 +1,16 @@
+apiVersion: skaffold/v1beta7
+kind: Config
+build:
+  artifacts:
+    - image: us.gcr.io/cloud-shell-gcloud/rocket-server
+      context: .
+      docker:
+        dockerfile: docker/serverDockerfile
+    - image: us.gcr.io/cloud-shell-gcloud/mongodb
+      docker:
+        dockerfile: docker/mongodbDockerfile
+deploy:
+  kubectl:
+    manifests:
+      # other than production
+      - ./k8s/*.yaml

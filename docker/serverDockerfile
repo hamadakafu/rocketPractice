@@ -1,0 +1,23 @@
+FROM rustlang/rust:nightly as builder
+RUN apt-get update && \
+    apt-get install musl-tools -y && \
+    rustup target add x86_64-unknown-linux-musl
+WORKDIR /usr/src/rocket_practice
+COPY Cargo.toml Cargo.toml
+RUN mkdir src/ && \
+    echo "fn main(){}" > src/main.rs && \
+    RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl && \
+    rm -rf src/ && \
+    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice && \
+    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/deps/rocket_practice* && \
+    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice.d
+COPY src src
+RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
+
+FROM alpine:latest
+RUN apk add --no-cache libpq
+WORKDIR /root/
+COPY --from=builder /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice .
+ENV RUST_BACKTRACE 1
+EXPOSE 8000
+CMD ["./rocket_practice"]
