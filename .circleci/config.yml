@@ -1,0 +1,34 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: google/cloud-sdk
+    environment:
+      REGION: us.gcr.io
+      GCP_PROJECT: cloud-shell-gcloud
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 18.06.0-ce
+      - run:
+          name: gcloud auth
+          command: |
+            echo $GCLOUD_SERVICE_KEY | base64 --decode > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file ${HOME}/gcloud-service-key.json
+            gcloud --quiet auth configure-docker
+      - run:
+          name: "docker build & push: web-server"
+          environment:
+            IMAGE_NAME: rust-api-server
+          command: |
+            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME}
+            docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
+            docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}
+      - run:
+          name: "docker build & push: mongodb"
+          environment:
+            IMAGE_NAME: mongodb
+          command: |
+            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME}
+            docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
+            docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}

@@ -2,22 +2,23 @@ FROM rustlang/rust:nightly as builder
 RUN apt-get update && \
     apt-get install musl-tools -y && \
     rustup target add x86_64-unknown-linux-musl
-WORKDIR /usr/src/rocket_practice
+ARG DIR_NAME
+WORKDIR /usr/src/${DIR_NAME}
 COPY Cargo.toml Cargo.toml
 RUN mkdir src/ && \
     echo "fn main(){}" > src/main.rs && \
     RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl && \
     rm -rf src/ && \
-    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice && \
-    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/deps/rocket_practice* && \
-    rm -f /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice.d
+    rm -f /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME} && \
+    rm -f /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/deps/${DIR_NAME}* && \
+    rm -f /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME}.d
 COPY src src
 RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
 
-FROM alpine:latest
+FROM alpine:3.9
 RUN apk add --no-cache libpq
 WORKDIR /root/
-COPY --from=builder /usr/src/rocket_practice/target/x86_64-unknown-linux-musl/release/rocket_practice .
+COPY --from=builder /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME} app
 ENV RUST_BACKTRACE 1
 EXPOSE 8000
-CMD ["./rocket_practice"]
+CMD ["./app"]

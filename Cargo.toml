@@ -1,14 +1,2 @@
-[package]
-name = "rocket_practice"
-version = "0.1.0"
-authors = ["hamadakafu <kafu.h1998@gmail.com>"]
-edition = "2018"
-
-[dependencies]
-rocket = "0.4.0"
-failure = "0.1.5"
-mongodb = "*"
-serde = "*"
-serde_derive = "*"
-wither = "*"
-wither_derive = "*"
+[workspace]
+members = ["rust-api-server"]

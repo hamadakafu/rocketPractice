@@ -2,13 +2,13 @@ apiVersion: skaffold/v1beta7
 kind: Config
 build:
   artifacts:
-    - image: us.gcr.io/cloud-shell-gcloud/rocket-server
+    - image: us.gcr.io/cloud-shell-gcloud/rust-api-server
       context: .
       docker:
-        dockerfile: docker/serverDockerfile
+        dockerfile: rust-api-server/Dockerfile
     - image: us.gcr.io/cloud-shell-gcloud/mongodb
       docker:
-        dockerfile: docker/mongodbDockerfile
+        dockerfile: mongodb/Dockerfile
 deploy:
   kubectl:
     manifests:
