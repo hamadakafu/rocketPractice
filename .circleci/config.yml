@@ -23,7 +23,8 @@ jobs:
           # due to 'docker pull' cut time
           command: |
             docker pull ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
-            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME} --build-arg=${IMAGE_NAME}
+            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} \
+            --cache-from ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest ${IMAGE_NAME} --build-arg=${IMAGE_NAME}
             docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
             docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}
       - run:
@@ -32,6 +33,7 @@ jobs:
             IMAGE_NAME: mongodb
           command: |
             docker pull ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
-            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME}
+            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME} \
+            --cache-from ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest ${IMAGE_NAME} --build-arg=${IMAGE_NAME}
             docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
             docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}
