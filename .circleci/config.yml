@@ -20,8 +20,10 @@ jobs:
           name: "docker build & push: web-server"
           environment:
             IMAGE_NAME: rust-api-server
+          # due to 'docker pull' cut time
           command: |
-            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME}
+            docker pull ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
+            docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME} --build-arg=${IMAGE_NAME}
             docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
             docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}
       - run:
@@ -29,6 +31,7 @@ jobs:
           environment:
             IMAGE_NAME: mongodb
           command: |
+            docker pull ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
             docker build -t ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${IMAGE_NAME}
             docker tag ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:${CIRCLE_BUILD_NUM} ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}:latest
             docker push ${REGION}/${GCP_PROJECT}/${IMAGE_NAME}
