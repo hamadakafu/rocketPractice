@@ -58,7 +58,7 @@ steps:
       - 'mongodb'
     waitFor: ['-']
 
-timeout: 1200s
+timeout: 1800s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'
   - 'us.gcr.io/${PROJECT_ID}/mongodb:$BRANCH_NAME-$REVISION_ID'

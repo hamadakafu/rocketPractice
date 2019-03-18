@@ -35,6 +35,7 @@ RUN cargo build --release
 
 FROM rustlang/rust:nightly
 ARG DIR_NAME
+WORKDIR /root/
 COPY --from=builder /usr/src/${DIR_NAME}/target/release/${DIR_NAME} app
 ENV RUST_BACKTRACE 1
 EXPOSE 8000
