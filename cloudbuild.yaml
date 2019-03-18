@@ -28,7 +28,7 @@ steps:
       - '--cache-from'
       - 'us.gcr.io/${PROJECT_ID}/rust-api-server-builder:latest'
       - 'rust-api-server'
-    waitFor: ['pull-app-builder']
+    waitFor: ['pull-app-builder', 'pull-app']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-app'
@@ -45,7 +45,7 @@ steps:
       - '--cache-from'
       - 'us.gcr.io/${PROJECT_ID}/rust-api-server-builder:latest'
       - 'rust-api-server'
-    waitFor: ['pull-app']
+    waitFor: ['build-app-builder']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-mongodb'
