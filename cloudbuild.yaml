@@ -58,7 +58,6 @@ steps:
       - 'mongodb'
     waitFor: ['-']
 
-  - name: 'gcr.io/cloud-builders/
 timeout: 1200s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'

@@ -9,7 +9,7 @@ spec:
   restartPolicy: Never
   containers:
     - name: rocket-container
-      image: us.gcr.io/cloud-shell-gcloud/rocket-server
+      image: us.gcr.io/cloud-shell-gcloud/rust-api-server:latest
       ports:
         - containerPort: 8000
 
@@ -24,6 +24,6 @@ spec:
   restartPolicy: Never
   containers:
     - name: mongodb-container
-      image: us.gcr.io/cloud-shell-gcloud/mongodb
+      image: us.gcr.io/cloud-shell-gcloud/mongodb:latest
       ports:
         - containerPort: 27017

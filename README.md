@@ -1,3 +1,6 @@
+## git
+- branch nameには'/'と'#'を使わない
+  - docker のtagにできないため
 ## wither_derive
 ### Model
 すべての Model struct は 
