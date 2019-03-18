@@ -57,6 +57,7 @@ steps:
       - 'us.gcr.io/${PROJECT_ID}/mongodb:$BRANCH_NAME-$REVISION_ID'
       - 'mongodb'
     waitFor: ['-']
+
 timeout: 1200s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'
@@ -65,3 +66,7 @@ images:
   - 'us.gcr.io/${PROJECT_ID}/rust-api-server:$BRANCH_NAME-$REVISION_ID'
   - 'us.gcr.io/${PROJECT_ID}/rust-api-server-builder:latest'
   - 'us.gcr.io/${PROJECT_ID}/rust-api-server-builder:$BRANCH_NAME-$REVISION_ID'
+# todo:
+# master のときだけ deploy
+# pod -> deployment
+# scale up timeout

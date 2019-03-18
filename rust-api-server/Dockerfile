@@ -12,7 +12,7 @@ RUN mkdir src/ && \
 COPY src src
 RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
 
-FROM alpine:3.9
+FROM rustlang/rust:nightly
 ARG DIR_NAME
 RUN apk add --no-cache libpq
 WORKDIR /root/

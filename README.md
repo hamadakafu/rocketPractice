@@ -1,3 +1,6 @@
+## git
+- branch nameには'/'と'#'を使わない
+  - docker のtagにできないため
 ## wither_derive
 ### Model
 すべての Model struct は 
@@ -6,6 +9,9 @@
 pub id: Option<ObjectId>,
 ```
 を持っている必要がある
+
+## Google Cloud Key Management Service
+秘密にしたいファイルを暗号化する
 
 ## docker
 - --cache-fromでは中間イメージを指定しなければ意味ない
