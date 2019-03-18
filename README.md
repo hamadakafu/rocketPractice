@@ -9,6 +9,7 @@ pub id: Option<ObjectId>,
 
 ## docker
 - --cache-fromでは中間イメージを指定しなければ意味ない
+- multi stage build 時には中間image の cacheが効かない
 
 ## skaffold
 ```bash
