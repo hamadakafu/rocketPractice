@@ -12,7 +12,7 @@ RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-li
 RUN rm -rf src/
 RUN rm -rf /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME}
 RUN rm -rf /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/deps/${DIR_NAME}*
-RUN rm -rf /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME}.d
+RUN rm -f /usr/src/${DIR_NAME}/target/x86_64-unknown-linux-musl/release/${DIR_NAME}.d
 COPY src src
 RUN RUSTFLAGS=-Clinker=musl-gcc cargo build --release --target=x86_64-unknown-linux-musl
 
