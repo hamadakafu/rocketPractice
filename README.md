@@ -7,6 +7,9 @@ pub id: Option<ObjectId>,
 ```
 を持っている必要がある
 
+## docker
+- --cache-fromでは中間イメージを指定しなければ意味ない
+
 ## skaffold
 ```bash
 minikube start

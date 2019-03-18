@@ -1,18 +1,11 @@
 steps:
   # build rust-api-server
-  - name: 'gcr.io/cloud-builders/docker'
+  - name: 'gcr.io/kaniko-project/executor:latest'
     id: 'build-rust-api-server'
     args:
-      - 'build'
-      - '-t'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
-      - '-t'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:$BRANCH_NAME-$REVISION_ID'
-      - '--build-arg'
-      - 'DIR_NAME=rust-api-server'
-      - '--cache-from'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
-      - 'rust-api-server'
+      - '--dockerfile=rust-api-server/Dockerfile'
+      - '--context=dir://rust-api-server'
+      - '--destination=us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
   - name: 'gcr.io/cloud-builders/docker'
     id: 'build-mongodb'
     args:
