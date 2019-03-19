@@ -1,5 +1,5 @@
 [package]
-name = "rust-api-server"
+name = "rust_api_server"
 version = "0.1.0"
 authors = ["hamadakafu <kafu.h1998@gmail.com>"]
 edition = "2018"
