@@ -65,6 +65,26 @@ steps:
       - 'mongodb'
     waitFor: ['pull-db']
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'get-credentials'
+    args:
+      - 'container'
+      - 'clusters'
+      - 'get-credentials'
+      - 'rocket-practice-cluster'
+      - '--zone=${_ZONE}'
+      - '--project=${PROJECT_ID}'
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'deployment-default'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/default'
+      - '--record'
+    waitFor: ['build-app', 'build-mongodb', 'get-credentials']
+
 timeout: 3600s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'
