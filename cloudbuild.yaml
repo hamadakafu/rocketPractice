@@ -85,6 +85,32 @@ steps:
       - '--record'
     waitFor: ['build-app', 'build-mongodb', 'get-credentials']
 
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'decrypto-deployment-production-loadbalancer'
+    args:
+      - 'kms'
+      - 'decrypt'
+      - '--location'
+      - 'global'
+      - '--keyring'
+      - 'rust-api'
+      - '--key'
+      - 'kubernetes-deployment-key'
+      - '--ciphertext-file'
+      - 'k8s/production/loadbalancer.yaml.encode'
+      - '--plaintext-file'
+      - 'k8s/production/loadbalancer.yaml'
+    waitFor: ['-']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'deployment-production-loadbalancer'
+    args:
+      - 'apply'
+      - '-f'
+      - 'k8s/production/loadbalancer.yaml'
+      - '--record'
+    waitFor: ['deployment-production-loadbalancer', 'build-app', 'build-mongodb', 'get-credentials']
+
 timeout: 3600s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'
