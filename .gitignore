@@ -1,6 +1,14 @@
 .idea
+
 target/*
 */target/*
+
 **/*.rs.bk
-k8s/production
+Cargo.lock
+
+# not allowed production
+k8s/production/*
+# only encoded by kms
+!k8s/production/*.encode
+
 skaffold/production*
