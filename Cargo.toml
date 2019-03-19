@@ -1,2 +1,2 @@
 [workspace]
-members = ["rust-api-server"]
+members = ["rust_api_server"]
