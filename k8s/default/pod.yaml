@@ -1,25 +1,9 @@
-# todo: yaml -> yml
 apiVersion: v1
 kind: Pod
 metadata:
-  name: web-server-pod
+  name: db-pod
   labels:
-    app: web-server
-spec:
-  restartPolicy: Never
-  containers:
-    - name: rocket-container
-      image: us.gcr.io/cloud-shell-gcloud/rust-api-server:latest
-      ports:
-        - containerPort: 8000
-
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: mongodb-pod
-  labels:
-    app: mongodb
+    app: db
 spec:
   restartPolicy: Never
   containers:

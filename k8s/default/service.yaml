@@ -10,7 +10,7 @@ spec:
       targetPort: 8000
       port: 8000
   selector:
-    app: web-server
+    app: api-server
 
 ---
 apiVersion: v1
@@ -24,4 +24,4 @@ spec:
       port: 27017
       targetPort: 27017
   selector:
-    app: mongodb
+    app: db

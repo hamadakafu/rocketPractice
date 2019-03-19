@@ -3,14 +3,14 @@ steps:
     id: 'pull-app-builder'
     args:
       - 'pull'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server-builder:latest'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:build-stage-cache'
     waitFor: ['-']
 
   - name: 'gcr.io/cloud-builders/docker'
     id: 'pull-app'
     args:
       - 'pull'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:latest'
     waitFor: ['-']
 
   - name: 'gcr.io/cloud-builders/docker'
@@ -25,14 +25,14 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:build-stage-cache'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:build-stage-cache'
       - '--target'
       - 'builder'
       - '--cache-from'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:build-stage-cache'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:build-stage-cache'
       - '--build-arg'
-      - 'DIR_NAME=rust-api-server'
-      - 'rust-api-server'
+      - 'DIR_NAME=rust_api_server'
+      - 'rust_api_server'
     waitFor: ['pull-app-builder', 'pull-app']
 
   - name: 'gcr.io/cloud-builders/docker'
@@ -40,16 +40,16 @@ steps:
     args:
       - 'build'
       - '-t'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:latest'
       - '-t'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:$BRANCH_NAME-$REVISION_ID'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:$BRANCH_NAME-$REVISION_ID'
       - '--cache-from'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:latest'
       - '--cache-from'
-      - 'us.gcr.io/${PROJECT_ID}/rust-api-server:build-stage-cache'
+      - 'us.gcr.io/${PROJECT_ID}/rust_api_server:build-stage-cache'
       - '--build-arg'
-      - 'DIR_NAME=rust-api-server'
-      - 'rust-api-server'
+      - 'DIR_NAME=rust_api_server'
+      - 'rust_api_server'
     waitFor: ['build-app-builder']
 
   - name: 'gcr.io/cloud-builders/docker'
@@ -69,8 +69,8 @@ timeout: 3600s
 images:
   - 'us.gcr.io/${PROJECT_ID}/mongodb:latest'
   - 'us.gcr.io/${PROJECT_ID}/mongodb:$BRANCH_NAME-$REVISION_ID'
-  - 'us.gcr.io/${PROJECT_ID}/rust-api-server:latest'
-  - 'us.gcr.io/${PROJECT_ID}/rust-api-server:$BRANCH_NAME-$REVISION_ID'
-  - 'us.gcr.io/${PROJECT_ID}/rust-api-server:build-stage-cache'
+  - 'us.gcr.io/${PROJECT_ID}/rust_api_server:latest'
+  - 'us.gcr.io/${PROJECT_ID}/rust_api_server:$BRANCH_NAME-$REVISION_ID'
+  - 'us.gcr.io/${PROJECT_ID}/rust_api_server:build-stage-cache'
 # todo:
 # pod -> deployment
