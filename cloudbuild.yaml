@@ -86,7 +86,7 @@ steps:
     waitFor: ['build-app', 'build-mongodb', 'get-credentials']
 
   - name: 'gcr.io/cloud-builders/gcloud'
-    id: 'decrypto-deployment-production-loadbalancer'
+    id: 'decrypt-deployment-production-loadbalancer'
     args:
       - 'kms'
       - 'decrypt'
@@ -109,7 +109,7 @@ steps:
       - '-f'
       - 'k8s/production/loadbalancer.yaml'
       - '--record'
-    waitFor: ['deployment-production-loadbalancer', 'build-app', 'build-mongodb', 'get-credentials']
+    waitFor: ['decrypt-deployment-production-loadbalancer', 'build-app', 'build-mongodb', 'get-credentials']
 
 timeout: 3600s
 images:
