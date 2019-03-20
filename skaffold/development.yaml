@@ -1,16 +1,22 @@
+# do not make sence
 apiVersion: skaffold/v1beta7
 kind: Config
 build:
   artifacts:
-    - image: us.gcr.io/cloud-shell-gcloud/rust-api-server
-      context: .
+    - image: rust_api_server
+      context: rust_api_server
       docker:
-        dockerfile: rust-api-server/Dockerfile
-    - image: us.gcr.io/cloud-shell-gcloud/mongodb
+        dockerfile: Dockerfile
+        target: rust_api_server:local-latest
+        buildArgs:
+          DIR_NAME: rust_api_server
+    - image: mongodb
+      context: mongodb
+      target: mongodb:local-latest
       docker:
-        dockerfile: mongodb/Dockerfile
+        dockerfile: Dockerfile
 deploy:
   kubectl:
     manifests:
       # other than production
-      - ./k8s/default/*
+      - ./k8s/local/*

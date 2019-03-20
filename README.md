@@ -12,6 +12,7 @@ pub id: Option<ObjectId>,
 
 ## Google Cloud Key Management Service
 秘密にしたいファイルを暗号化する
+- k8s/productionをいちいち暗号化するのが手間
 
 ## docker
 - --cache-fromでは中間イメージを指定しなければ意味ない
@@ -43,5 +44,12 @@ rust-api -> rust_api
 ### NSレコード
 [domain] IN NS [server]
 
+## kubernetes
+- deployment は spec.template が変更されないと変わらないので，  
+- set image をやる必要があるかも
+- patch で解決できるが
+- 動的にyaml生成できるようにしたい
+
 ## Todo
 - mongodbの永続化をあとでやる
+- 動的にyaml生成できるようにしたい
