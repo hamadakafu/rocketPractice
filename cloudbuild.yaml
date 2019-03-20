@@ -65,6 +65,7 @@ steps:
       - 'mongodb'
     waitFor: ['pull-db']
 
+  # -------------- deploy ----------------
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'get-credentials'
     args:
@@ -77,13 +78,23 @@ steps:
     waitFor: ['-']
 
   - name: 'gcr.io/cloud-builders/kubectl'
-    id: 'deployment-default'
+    id: 'deploy-default'
     args:
       - 'apply'
       - '-f'
       - 'k8s/default'
       - '--record'
     waitFor: ['build-app', 'build-mongodb', 'get-credentials']
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    id: 'patch-default-deployment'
+    args:
+      - 'patch'
+      - 'deployment'
+      - 'api-server-deployment'
+      - '-p'
+      - '{"spec":{"template":{"spec":{"containers":[{"name": "api-server", "image": "us.gcr.io/$PROJECT_ID/rust_api_server:$BRANCH_NAME-$REVISION_ID"}]}}}}'
+    waitFor: ['deploy-default']
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'decrypt-deployment-production-loadbalancer'
@@ -109,7 +120,7 @@ steps:
       - '-f'
       - 'k8s/production/loadbalancer.yaml'
       - '--record'
-    waitFor: ['decrypt-deployment-production-loadbalancer', 'build-app', 'build-mongodb', 'get-credentials']
+    waitFor: ['decrypt-deployment-production-loadbalancer', 'get-credentials']
 
 timeout: 3600s
 images:

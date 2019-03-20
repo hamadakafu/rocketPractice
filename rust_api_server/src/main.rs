@@ -12,10 +12,15 @@ use mongodb::{
     // coll::options::IndexModel,
     // oid::ObjectId,
 };
+
 use wither::prelude::Model;
 
 mod othello;
 
+#[get("/")]
+fn home() -> String {
+    String::from("home")
+}
 
 #[get("/hello")]
 fn hello() -> String {

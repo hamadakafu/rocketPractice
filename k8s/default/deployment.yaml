@@ -13,7 +13,7 @@ spec:
         app: api-server
     spec:
       containers:
-        - name: rocket-container
+        - name: api-server
           image: us.gcr.io/cloud-shell-gcloud/rust_api_server:latest
           ports:
             - containerPort: 8000
