@@ -94,7 +94,7 @@ steps:
       - 'api-server-deployment'
       - '-p'
       - '{"spec":{"template":{"spec":{"containers":[{"name": "api-server", "image": "us.gcr.io/$PROJECT_ID/rust_api_server:$BRANCH_NAME-$REVISION_ID"}]}}}}'
-    waitFor: ['deploy-default']
+    waitFor: ['deploy-default', 'build-app']
 
   - name: 'gcr.io/cloud-builders/gcloud'
     id: 'decrypt-deployment-production-loadbalancer'

@@ -38,6 +38,7 @@ fn main() {
     rocket::ignite().mount("/", routes![
         hello,
         mm,
+        home,
     ]).launch();
 }
 
