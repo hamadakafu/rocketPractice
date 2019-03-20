@@ -49,6 +49,9 @@ rust-api -> rust_api
 - set image をやる必要があるかも
 - patch で解決できるが
 - 動的にyaml生成できるようにしたい
+- minikubeを使っているときにimage pull policy が Always担っていると  
+- 外部からとってきてしまいlocalを使わないので注意
+- Neverにしておけば良さそう
 
 ## Todo
 - mongodbの永続化をあとでやる

@@ -59,7 +59,7 @@ pub struct Othello {
     #[serde(rename="_id", skip_serializing_if="Option::is_none")]
     id: Option<ObjectId>,
     #[model(index(index="dsc", unique="true"))]
-    room_name: String,
+    pub room_name: String,
     #[model(index(index="dsc"))]
     board: Board,
     #[model(index(index="dsc"))]
@@ -86,10 +86,10 @@ impl fmt::Display for Othello {
 const LENGTH: isize = 8;
 
 impl Othello {
-    pub fn new(room_name: String) -> Othello {
+    pub fn new(room_name: &str) -> Othello {
         Othello {
             id: None,
-            room_name,
+            room_name: String::from(room_name),
             board: Board::new(),
             n_turn: 0,
             next_turn: OthelloPlayer::White,
