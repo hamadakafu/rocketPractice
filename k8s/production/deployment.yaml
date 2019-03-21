@@ -14,7 +14,9 @@ spec:
     spec:
       containers:
         - name: api-server
-          image: us.gcr.io/cloud-shell-gcloud/rust_api_server:production-latest
+          # image must be updated patch in cloud build.
+          # cloud build can't use local image at the moment.
+          image: us.gcr.io/cloud-shell-gcloud/rust_api_server:production-latest # dummy image
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
