@@ -21,9 +21,9 @@ fn connect_db() -> Result<Database, ApiError> {
 }
 
 #[get("/othello/create/<room>")]
-pub fn create_room(room: String) -> Result<json::Json<String>, ApiError> {
-     create_room_helper(&room)
-        .map(|()| json::Json("{'state': true}".to_string()))
+pub fn create_room(room: String) -> Result<json::JsonValue, ApiError> {
+    create_room_helper(&room)
+        .map(|()| json!({ "status": true }))
 }
 
 

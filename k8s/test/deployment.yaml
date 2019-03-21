@@ -15,6 +15,6 @@ spec:
       containers:
         - name: api-server
           image: us.gcr.io/cloud-shell-gcloud/rust_api_server:test-latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Never
           ports:
             - containerPort: 8000

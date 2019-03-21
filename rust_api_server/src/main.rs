@@ -15,6 +15,7 @@ use mongodb::{
     // oid::ObjectId,
 };
 use wither::prelude::Model;
+use rocket_codegen::catchers;
 
 mod othello;
 mod api;
@@ -44,6 +45,6 @@ fn main() {
         mm,
         api::create_room,
         api::get_rooms,
-    ]).launch();
+    ]).register(catchers![not_found]).launch();
 }
 
