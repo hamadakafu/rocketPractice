@@ -40,6 +40,9 @@ rust-api -> rust_api
 これをしないとlocalのimageを使わない
 ```eval $(minikube docker-env)```
 
+## google cloud build
+- localのimageをつかってくれない
+
 ## DNS
 ### フルサービスリソルバー・DNSキャッシュサーバ
 カンニング野郎
