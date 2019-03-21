@@ -30,11 +30,18 @@ image名は何でも良さそう
 ### skaffold run
 一回だけやってくれる
 
-### cargo 
+## cargo 
 project name は絶対にsnake_caseにしろ
 '-'が'_'に自動的に変換されるため
 rust-api -> rust_api
 予期せぬ自体になる
+
+## minikube 
+これをしないとlocalのimageを使わない
+```eval $(minikube docker-env)```
+
+## google cloud build
+- localのimageをつかってくれない
 
 ## DNS
 ### フルサービスリソルバー・DNSキャッシュサーバ
