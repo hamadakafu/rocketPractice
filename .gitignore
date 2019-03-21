@@ -7,7 +7,7 @@ target/*
 Cargo.lock
 
 # not allowed production
-k8s/production/*
+k8s/production/loadbalancer.yaml
 # only encoded by kms
 !k8s/production/*.encode
 
