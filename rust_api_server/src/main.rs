@@ -7,7 +7,7 @@ extern crate wither_derive;
 #[macro_use]
 extern crate failure;
 
-use rocket::{routes, get};
+use rocket::{routes, get, catch, response::content};
 use mongodb::{
     ThreadedClient,
     db::{Database, ThreadedDatabase},
@@ -19,9 +19,9 @@ use wither::prelude::Model;
 mod othello;
 mod api;
 
-#[get("/hello")]
+#[get("/")]
 fn hello() -> String {
-    String::from("hello unko unko\n")
+    String::from("hello\n")
 }
 #[get("/mongodb_test")]
 fn mm() -> String {
@@ -29,6 +29,13 @@ fn mm() -> String {
         .expect("Failed to initialize client.").db("myDB");
     let othellos = othello::Othello::find_one(db.clone(), None, None).expect("wtf");
     format!("othello: {:?}", othellos)
+}
+
+#[catch(404)]
+fn not_found(req: &rocket::Request) -> content::Html<String> {
+    content::Html(format!("<p>Sorry, but '{}' is not a valid path!</p>
+            <p>Try visiting /hello/&lt;name&gt;/&lt;age&gt; instead.</p>",
+                          req.uri()))
 }
 
 fn main() {
