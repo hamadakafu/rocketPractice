@@ -94,7 +94,7 @@ steps:
       - 'api-server-deployment'
       - '-p'
       - '{"spec":{"template":{"spec":{"containers":[{"name": "api-server", "image": "us.gcr.io/$PROJECT_ID/rust_api_server:${_STATE}-$REVISION_ID"}]}}}}'
-   waitFor: ['deploy-default', 'build-app']
+    waitFor: ['deploy-default', 'build-app']
 
 timeout: 3600s
 images:
