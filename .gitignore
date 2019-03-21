@@ -12,3 +12,5 @@ k8s/production/*
 !k8s/production/*.encode
 
 skaffold/production*
+
+task.sh

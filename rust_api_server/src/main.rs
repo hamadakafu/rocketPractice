@@ -4,6 +4,8 @@
 extern crate mongodb;
 #[macro_use(Model)]
 extern crate wither_derive;
+#[macro_use]
+extern crate failure;
 
 use rocket::{routes, get};
 use mongodb::{
@@ -12,15 +14,10 @@ use mongodb::{
     // coll::options::IndexModel,
     // oid::ObjectId,
 };
-
 use wither::prelude::Model;
 
 mod othello;
-
-#[get("/")]
-fn home() -> String {
-    String::from("home")
-}
+mod api;
 
 #[get("/hello")]
 fn hello() -> String {
@@ -38,7 +35,8 @@ fn main() {
     rocket::ignite().mount("/", routes![
         hello,
         mm,
-        home,
+        api::create_room,
+        api::get_rooms,
     ]).launch();
 }
 
