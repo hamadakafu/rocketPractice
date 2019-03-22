@@ -5,7 +5,7 @@ metadata:
   labels:
     app: db
 spec:
-  restartPolicy: Never
+  restartPolicy: Always
   containers:
     - name: mongodb-container
       image: us.gcr.io/cloud-shell-gcloud/mongodb:production-latest
