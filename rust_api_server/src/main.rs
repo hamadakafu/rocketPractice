@@ -24,13 +24,6 @@ mod api;
 fn hello() -> String {
     String::from("hello\n")
 }
-#[get("/mongodb_test")]
-fn mm() -> String {
-    let db: Database = mongodb::Client::with_uri("mongodb://mongodb-service:27017/")
-        .expect("Failed to initialize client.").db("myDB");
-    let othellos = othello::Othello::find_one(db.clone(), None, None).expect("wtf");
-    format!("othello: {:?}", othellos)
-}
 
 #[catch(404)]
 fn not_found(req: &rocket::Request) -> content::Html<String> {
@@ -42,7 +35,6 @@ fn not_found(req: &rocket::Request) -> content::Html<String> {
 fn main() {
     rocket::ignite().mount("/", routes![
         hello,
-        mm,
         api::create_room,
         api::get_rooms,
     ]).register(catchers![not_found]).launch();

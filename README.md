@@ -60,6 +60,12 @@ rust-api -> rust_api
 - 外部からとってきてしまいlocalを使わないので注意
 - Neverにしておけば良さそう
 
+## failure
+### 実装パターン
+#### String -> Error
+- failure::err_msg
+- format_err!
+        
 ## Todo
 - mongodbの永続化をあとでやる
 - 動的にyaml生成できるようにしたい
