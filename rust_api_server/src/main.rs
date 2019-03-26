@@ -27,9 +27,7 @@ fn hello() -> String {
 
 #[catch(404)]
 fn not_found(req: &rocket::Request) -> content::Html<String> {
-    content::Html(format!("<p>Sorry, but '{}' is not a valid path!</p>
-            <p>Try visiting /hello/&lt;name&gt;/&lt;age&gt; instead.</p>",
-                          req.uri()))
+    content::Html(format!("<p>Sorry, but '{}' is not a valid path!</p>", req.uri()))
 }
 
 fn main() {
@@ -39,4 +37,3 @@ fn main() {
         api::get_rooms,
     ]).register(catchers![not_found]).launch();
 }
-
