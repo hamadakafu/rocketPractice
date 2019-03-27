@@ -19,13 +19,12 @@ fn connect_db() -> Result<Database, APIError> {
         .map_err(APIErrorKind::from)?.db("myDB"))
 }
 
-#[get("/othello/create/<room>")]
-pub fn create_room(room: String) -> Result<json::JsonValue, Status> {
-    create_room_helper(&room)
+#[get("/othello/create/room/<room_name>")]
+pub fn create_room(room_name: String) -> Result<json::JsonValue, Status> {
+    create_room_helper(&room_name)
         .map(|()| json!({ "status": true }))
         .map_err(|e| e.to_status())
 }
-
 
 fn create_room_helper(room_name: &String) -> Result<(), APIError> {
     let db: Database = connect_db()?;
@@ -41,7 +40,7 @@ fn create_room_helper(room_name: &String) -> Result<(), APIError> {
     }
 }
 
-#[get("/othello/rooms")]
+#[get("/othello/get/room")]
 pub fn get_rooms() -> Result<json::Json<Vec<String>>, Status> {
     let rooms: Vec<String> = get_rooms_helper().map_err(|e| e.to_status())?;
     Ok(json::Json(rooms))
