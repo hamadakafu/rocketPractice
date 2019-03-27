@@ -3,16 +3,21 @@ use std::ops::Add;
 
 use serde_derive::{Deserialize, Serialize};
 
-use super::super::OthelloError;
-use self::Direction::*;
+use {
+    super::{
+        error::OthelloError,
+        LENGTH,
+    },
+    self::Direction::*,
+};
 
 #[cfg(test)]
 mod tests;
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Deserialize, Serialize)]
 pub struct OthelloCell {
-    point: Point,
-    state: CellState,
+    pub point: Point,
+    pub state: CellState,
 }
 
 impl OthelloCell {
@@ -22,8 +27,6 @@ impl OthelloCell {
             state: CellState::Empty,
         }
     }
-    pub fn set_state(&mut self, cs: CellState) { self.state = cs; }
-    pub fn get_state(&self) -> CellState { self.state }
 }
 
 #[derive(Debug, Eq, PartialEq, Copy, Clone, Deserialize, Serialize)]
@@ -55,11 +58,11 @@ impl Point {
                                -> Result<(), OthelloError>
     {
         if let (true, _) | (_, true) = (
-            self.x >= super::super::LENGTH || self.x < 0,
-            self.y >= super::super::LENGTH || self.y < 0,
+            self.x >= LENGTH || self.x < 0,
+            self.y >= LENGTH || self.y < 0,
         ) { Err(OthelloError::OutOfBounds { point: *self }) } else { Ok(()) }
     }
-    pub fn to_index(&self) -> usize { (self.x * super::super::LENGTH + self.y) as usize }
+    pub fn to_index(&self) -> usize { (self.x * LENGTH + self.y) as usize }
     pub fn neighbors(&self) -> Vec<Point> {
         Direction::change_to_vec().into_iter()
             .map(|dir| *self + dir)

@@ -2,13 +2,18 @@ use std::fmt;
 
 use serde_derive::{Deserialize, Serialize};
 
-use self::othello_cell::{Point, OthelloCell, CellState, Direction};
-use super::OthelloError;
-
+use super::{
+    cell::{
+        OthelloCell,
+        Point,
+        CellState,
+        Direction,
+    },
+    error::OthelloError,
+};
 
 #[cfg(test)]
 mod tests;
-pub mod othello_cell;
 
 #[derive(Eq, PartialEq, Deserialize, Serialize)]
 pub struct Board(pub Vec<OthelloCell>);
@@ -31,8 +36,11 @@ impl Board {
 
     fn get_cell(&self, point: Point) -> OthelloCell { self.0[point.to_index()] }
 
+    /// change cell state.
+    ///
+    /// it may cause run time error
     fn change(&mut self, point: Point, cs: CellState) {
-        self.0[point.to_index()].set_state(cs);
+        self.0[point.to_index()].state = cs;
     }
 
     pub fn set(&mut self, point: Point, cs: CellState)
@@ -40,7 +48,7 @@ impl Board {
     {
         point.check_out_of_bounds()?;
         if cs == CellState::Empty { return Err(OthelloError::CantSetEmpty); }
-        match self.get_cell(point).get_state() {
+        match self.get_cell(point).state {
             CellState::Black | CellState::White =>
                 Err(OthelloError::AlreadyOccupied {
                     cell: self.get_cell(point),
@@ -78,9 +86,9 @@ impl Board {
         if point.check_out_of_bounds().is_err() { return None; }
 
         let now_cell = self.get_cell(point);
-        if now_cell.get_state() == CellState::Empty {
+        if now_cell.state == CellState::Empty {
             None
-        } else if now_cell.get_state() == cs {
+        } else if now_cell.state == cs {
             Some(0)
         } else {
             self.sandwich(dir, point + dir, cs).map(
@@ -100,7 +108,7 @@ impl fmt::Debug for Board {
         for x in 0..super::LENGTH {
             write!(f, "{}|", x)?;
             for y in 0..super::LENGTH {
-                write!(f, " {}", self.get_cell(Point::new(x, y)).get_state())?;
+                write!(f, " {}", self.get_cell(Point::new(x, y)).state)?;
             }
             write!(f, "\n")?;
         }

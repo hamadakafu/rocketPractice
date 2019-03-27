@@ -3,8 +3,8 @@ use super::*;
 #[test]
 fn test_board_new() {
     let b = Board::new();
-    assert_eq!(CellState::Black, b.get_cell(Point::new(3, 4)).get_state());
-    assert_eq!(CellState::White, b.get_cell(Point::new(4, 4)).get_state());
+    assert_eq!(CellState::Black, b.get_cell(Point::new(3, 4)).state);
+    assert_eq!(CellState::White, b.get_cell(Point::new(4, 4)).state);
 }
 
 #[test]
@@ -16,7 +16,7 @@ fn test_board_change() {
     ];
     for test in test_table {
         b.change(test.0, test.1);
-        assert_eq!(b.get_cell(test.0).get_state(), test.1);
+        assert_eq!(b.get_cell(test.0).state, test.1);
     }
 }
 
