@@ -1,48 +1,25 @@
-use std::fmt;
+#[cfg(test)]
+mod tests;
+mod board;
+#[macro_use]
+mod io;
+mod error;
+mod cell;
 
-use failure::Fail;
+use std::fmt;
 
 use serde_derive::{Deserialize, Serialize};
 use mongodb::oid::ObjectId;
 use mongodb::coll::options::IndexModel;
 
-use crate::othello::othello_board::{
-    Board,
-    othello_cell::{
-        OthelloCell,
+use crate::othello::{
+    board::Board,
+    cell::{
         CellState,
-        Point
+        Point,
     },
+    error::OthelloError,
 };
-
-#[cfg(test)]
-mod tests;
-mod othello_board;
-#[macro_use]
-mod io;
-
-#[derive(Debug, Fail, Eq, PartialEq)]
-pub enum OthelloError {
-    #[fail(display = "Out of bounds => point: {:?}", point)]
-    OutOfBounds {
-        point: Point,
-    },
-    #[fail(display = "This Cell is already occupied => cell state: {:?}", cell)]
-    AlreadyOccupied {
-        cell: OthelloCell,
-    },
-    #[fail(display = "Can't set Empty")]
-    CantSetEmpty,
-    #[fail(display = "Don't exist char => char: {}", c)]
-    NoExistChar {
-        c: char,
-    },
-    #[fail(display = "Can't set at this cell: cell: {:?}", cell)]
-    CantSetAtCell {
-        cell: OthelloCell,
-    },
-}
-
 
 #[derive(Model, Eq, PartialEq, Deserialize, Serialize)]
 pub struct Othello {
@@ -56,15 +33,15 @@ pub struct Othello {
     |
     xN o    o    ..   o
     */
-    #[serde(rename="_id", skip_serializing_if="Option::is_none")]
+    #[serde(rename = "_id", skip_serializing_if = "Option::is_none")]
     id: Option<ObjectId>,
-    #[model(index(index="dsc", unique="true"))]
+    #[model(index(index = "dsc", unique = "true"))]
     pub room_name: String,
-    #[model(index(index="dsc"))]
+    #[model(index(index = "dsc"))]
     board: Board,
-    #[model(index(index="dsc"))]
+    #[model(index(index = "dsc"))]
     n_turn: isize,
-    #[model(index(index="dsc"))]
+    #[model(index(index = "dsc"))]
     next_turn: OthelloPlayer,
 }
 
@@ -102,14 +79,15 @@ impl Othello {
             println!("{}", self);
             println!("input x y (ex: 3 4): ");
             let (x, y): (isize, isize) = input!(r, isize, isize);
-            let set_result: Result<usize, OthelloError> = match self.next_turn {
-                OthelloPlayer::White => {
-                    self.set(x, y, 'W')
-                }
-                OthelloPlayer::Black => {
-                    self.set(x, y, 'B')
-                }
-            };
+            let set_result: Result<usize, OthelloError> =
+                match self.next_turn {
+                    OthelloPlayer::White => {
+                        self.set(x, y, 'W')
+                    }
+                    OthelloPlayer::Black => {
+                        self.set(x, y, 'B')
+                    }
+                };
             match set_result {
                 Err(OthelloError::OutOfBounds { point: _ }) |
                 Err(OthelloError::CantSetAtCell { cell: _ }) |
@@ -126,6 +104,13 @@ impl Othello {
         }
         Ok(())
     }
+
+    /// change turn
+    /// # Example
+    /// ```
+    /// let mut o = Othello::new();
+    /// o.next();
+    /// ```
     fn next(&mut self) {
         match &self.next_turn {
             OthelloPlayer::White => {

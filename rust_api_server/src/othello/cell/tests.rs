@@ -5,7 +5,7 @@ use crate::othello::OthelloError::OutOfBounds;
 fn test_othello_cell() {
     let mut oc: OthelloCell = OthelloCell::new(3, 4);
     assert_eq!(oc.state, CellState::Empty);
-    oc.set_state(CellState::White);
+    oc.state = CellState::White;
     assert_eq!(oc.state, CellState::White);
 }
 
