@@ -23,7 +23,7 @@ fn connect_db() -> Result<Database, APIError> {
 #[get("/othello/create/room/<room_name>")]
 pub fn create_room_handler(room_name: String) -> Result<json::JsonValue, Status> {
     create_room_helper(&room_name)
-        .map(|()| json!({ "status": true }))
+        .map(|()| json!(true))
         .map_err(|e| e.to_status())
 }
 
