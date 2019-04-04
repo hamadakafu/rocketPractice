@@ -4,6 +4,8 @@ use rocket::http;
 
 use std::fmt::Display;
 
+use crate::othello::error::OthelloError;
+
 #[derive(Debug)]
 pub struct APIError {
     inner: Context<APIErrorKind>,
@@ -34,6 +36,7 @@ impl APIError {
             APIErrorKind::AlreadyExistRoom(_) => http::Status::NotAcceptable,
             APIErrorKind::NotExistRoom(_) => http::Status::NotAcceptable,
             APIErrorKind::MongoError(_) => http::Status::ServiceUnavailable,
+            APIErrorKind::GameSystemError(_) => http::Status::InternalServerError,
         }
     }
 }
@@ -58,10 +61,18 @@ pub enum APIErrorKind {
     AlreadyExistRoom(String),
     #[fail(display = "mongo error: {}", _0)]
     MongoError(String),
+    #[fail(display = "game system error: {}", _0)]
+    GameSystemError(OthelloError)
 }
 
 impl From<mongodb::Error> for APIErrorKind {
     fn from(m_error: mongodb::Error) -> APIErrorKind {
         APIErrorKind::MongoError(m_error.to_string())
+    }
+}
+
+impl From<OthelloError> for APIErrorKind {
+    fn from(o_error: OthelloError) -> APIErrorKind {
+        APIErrorKind::GameSystemError(o_error)
     }
 }

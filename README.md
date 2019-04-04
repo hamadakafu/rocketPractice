@@ -1,3 +1,21 @@
+# Usage
+## /othello/create/room/<room_name>
+path: /othello/create/room/test_room_name  
+response: true or 40x
+
+## /othello/delete/room/<room_name>
+path: /othello/delete/room/test_room_name  
+response: true or 40x
+
+## /othello/get/room
+path: /othello/get/room  
+response: \[(ROOM,)*\] or 40x
+
+## /othello/set/<room_name>/<color>/<x>/<y>
+path: /othello/set/test_room_name/(white|black)/3/5  
+response: othello or 40x
+
+# Memo
 ## git
 - branch nameには'/'と'#'を使わない
   - docker のtagにできないため

@@ -3,7 +3,7 @@ mod tests;
 mod board;
 #[macro_use]
 mod io;
-mod error;
+pub mod error;
 mod cell;
 
 use std::fmt;
@@ -111,7 +111,7 @@ impl Othello {
     /// let mut o = Othello::new();
     /// o.next();
     /// ```
-    fn next(&mut self) {
+    pub fn next(&mut self) {
         match &self.next_turn {
             OthelloPlayer::White => {
                 self.next_turn = OthelloPlayer::Black;
@@ -134,7 +134,7 @@ impl Othello {
     }
 }
 
-#[derive(Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[derive(Debug, Eq, PartialEq, Deserialize, Serialize, Copy, Clone)]
 enum OthelloPlayer {
     White,
     Black,

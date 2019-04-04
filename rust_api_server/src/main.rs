@@ -4,17 +4,8 @@
 extern crate mongodb;
 #[macro_use(Model)]
 extern crate wither_derive;
-#[macro_use]
-extern crate failure;
 
 use rocket::{routes, get, catch, response::content};
-use mongodb::{
-    ThreadedClient,
-    db::{Database, ThreadedDatabase},
-    // coll::options::IndexModel,
-    // oid::ObjectId,
-};
-use wither::prelude::Model;
 use rocket_codegen::catchers;
 
 mod othello;
@@ -33,7 +24,9 @@ fn not_found(req: &rocket::Request) -> content::Html<String> {
 fn main() {
     rocket::ignite().mount("/", routes![
         hello,
-        api::create_room,
-        api::get_rooms,
+        api::create_room_handler,
+        api::get_rooms_handler,
+        api::set_piece_handler,
+        api::delete_room_handler,
     ]).register(catchers![not_found]).launch();
 }

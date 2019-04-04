@@ -2,7 +2,7 @@ use failure::Fail;
 
 use super::cell::{Point, OthelloCell};
 
-#[derive(Debug, Fail, Eq, PartialEq)]
+#[derive(Debug, Fail, Eq, PartialEq, Clone, Copy)]
 pub enum OthelloError {
     #[fail(display = "Out of bounds => point: {:?}", point)]
     OutOfBounds {
