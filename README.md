@@ -11,7 +11,7 @@ response: true or 40x
 path: /othello/get/room  
 response: \[(ROOM,)*\] or 40x
 
-## /othello/set/<room_name>/<color>/<x>/<y>
+## /othello/set/<room_name>/\<color\>/\<x\>/\<y\>
 path: /othello/set/test_room_name/(white|black)/3/5  
 response: othello or 40x
 
